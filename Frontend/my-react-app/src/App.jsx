@@ -106,29 +106,36 @@ export default function App() {
 
   const refreshUser = async () => {
     if (!user) {
+      console.log("⚠️ refreshUser called but no user exists");
       setSyncLoading(false);
       return;
     }
 
+    console.log("🔄 Starting backend sync for:", user.email);
     setSyncLoading(true);
     try {
       const res = await API.get(`/api/onboarding/user/${user.email}`);
       const backendUser = res.data?.user;
+      console.log("✅ Backend sync successful:", backendUser);
+
       if (backendUser) {
         if (backendUser.role) backendUser.role = backendUser.role.toLowerCase();
         setFullUserData(backendUser);
         localStorage.setItem('user', JSON.stringify(backendUser));
       }
     } catch (err) {
-      console.error("Sync error:", err);
+      console.error("❌ Backend sync error:", err);
       // If backend sync fails, set a minimal user object to prevent infinite loading
-      setFullUserData({
+      const minimalUser = {
         email: user.email,
         role: null,
         onboardingComplete: false
-      });
+      };
+      console.log("⚠️ Setting minimal user object:", minimalUser);
+      setFullUserData(minimalUser);
     } finally {
       setSyncLoading(false);
+      console.log("✅ Backend sync complete, syncLoading = false");
     }
   };
 
