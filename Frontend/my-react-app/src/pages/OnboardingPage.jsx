@@ -71,7 +71,7 @@ const OnboardingPage = ({ refreshUser }) => {
         };
 
         try {
-            const response = await API.post(`${BASE_URL}/api/onboarding`, onboardingData);
+            const response = await API.post('/api/onboarding', onboardingData);
 
             if (response.status === 200) {
                 toast.success("Nest Found! Welcome aboard.", { id: loadingToast });
