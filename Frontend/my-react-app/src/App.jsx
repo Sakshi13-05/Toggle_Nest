@@ -133,6 +133,12 @@ export default function App() {
   };
 
   useEffect(() => {
+    console.log("🔄 Auth State Changed:", {
+      hasUser: !!user,
+      userEmail: user?.email,
+      triggeredRefresh: !!user
+    });
+
     if (user) {
       refreshUser();
     } else {

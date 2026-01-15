@@ -37,7 +37,7 @@ const LoginPage = () => {
           const user = result.user;
           const token = await user.getIdToken();
 
-          // 1. Verify token
+          // Verify token with backend
           try {
             await fetch(`${BASE_URL}/api/auth/verify`, {
               method: "POST",
@@ -47,29 +47,9 @@ const LoginPage = () => {
             console.warn("Verification sub-call failed:", verifyErr);
           }
 
-          // 2. Fetch Role
-          const res = await fetch(`${BASE_URL}/api/onboarding/user/${user.email}`);
-          const data = await res.json();
-          const userData = data?.user;
-          const role = userData?.role;
-          const onboardingConfirmed = userData?.onboardingComplete;
-
-          localStorage.setItem("user", JSON.stringify({
-            email: user.email,
-            role: role || null,
-            projectId: userData?.projectId || null,
-            onboardingComplete: onboardingConfirmed || false,
-          }));
-
-          // 3. Navigate
-          if (!onboardingConfirmed || !role) {
-            toast.error("Account detected. Please complete onboarding.");
-            navigate("/onboarding", { replace: true });
-          } else if (role.toLowerCase() === "admin") {
-            navigate("/admindashboard", { replace: true });
-          } else {
-            navigate("/dashboard", { replace: true });
-          }
+          // SUCCESS: Let App.jsx routing handle the redirect based on auth state
+          toast.success("Welcome back!");
+          // Don't navigate manually - let App.jsx handle it
         }
       } catch (error) {
         console.error("Redirect Login Error:", error);
@@ -109,6 +89,7 @@ const LoginPage = () => {
       const user = userCredential.user;
       const token = await user.getIdToken();
 
+      // Verify token with backend
       try {
         await fetch(`${BASE_URL}/api/auth/verify`, {
           method: "POST",
@@ -118,38 +99,22 @@ const LoginPage = () => {
         console.warn("Verification sub-call failed:", verifyErr);
       }
 
-      const res = await fetch(
-        `${BASE_URL}/api/onboarding/user/${user.email}`
-      );
-      const data = await res.json();
-
-      const userData = data?.user;
-      const role = userData?.role;
-      const onboardingComplete = userData?.onboardingComplete;
-
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          email: user.email,
-          role: role || null,
-          projectId: userData?.projectId || null,
-          onboardingComplete: onboardingComplete || false,
-        })
-      );
-
-      if (!onboardingComplete || !role) {
-        toast.error("Account detected. Please complete onboarding.");
-        navigate("/onboarding", { replace: true });
-      } else if (role.toLowerCase() === "admin") {
-        navigate("/admindashboard", { replace: true });
-      } else {
-        navigate("/dashboard", { replace: true });
-      }
+      // SUCCESS: Let App.jsx routing handle the redirect based on auth state
+      toast.success("Welcome back!");
+      // Don't navigate manually - let App.jsx handle it
 
     } catch (error) {
       console.error("Login Error:", error);
-      toast.error("Account detected. Please complete onboarding.");
-      navigate("/onboarding", { replace: true });
+
+      if (error.code === 'auth/wrong-password') {
+        toast.error("Incorrect password. Please try again.");
+      } else if (error.code === 'auth/user-not-found') {
+        toast.error("No account found with this email.");
+      } else if (error.code === 'auth/invalid-email') {
+        toast.error("Please enter a valid email address.");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
     }
   };
 
