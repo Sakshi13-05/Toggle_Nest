@@ -1,0 +1,413 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --ob-white: #FFFFFF;
+    --ob-bg-right: #FAFAFA;
+    --ob-black: #000000;
+    --ob-text-sub: #94A3B8;
+    --ob-border: #E5E7EB;
+    --ob-border-active: #000000;
+}
+
+/* Page Reset */
+.ob-page-wrapper {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-color: var(--ob-white);
+    min-height: 100vh;
+    width: 100%;
+}
+
+.ob-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Left Column - Interaction */
+.ob-left {
+    flex: 1;
+    background-color: var(--ob-white);
+    padding: 80px 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Centering content now */
+    position: relative;
+}
+
+/* Step Indicator (Dots) */
+.ob-step-indicator {
+    position: absolute;
+    top: 60px;
+    left: 100px;
+    display: flex;
+    gap: 8px;
+}
+
+.ob-step-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--ob-border);
+    transition: background-color 0.3s ease;
+}
+
+.ob-step-dot.active {
+    background-color: var(--ob-black);
+}
+
+
+/* Typography */
+.ob-header {
+    margin-bottom: 40px;
+}
+
+.ob-title {
+    font-size: 32px;
+    font-weight: 500;
+    /* Medium per request */
+    color: var(--ob-black);
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+.ob-subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    /* Normal */
+    color: var(--ob-text-sub);
+    line-height: 1.5;
+}
+
+/* Forms & Inputs */
+.ob-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.ob-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ob-black);
+    margin-bottom: 8px;
+}
+
+.ob-input-group {
+    position: relative;
+    width: 100%;
+}
+
+.ob-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ob-black);
+    pointer-events: none;
+}
+
+.ob-input {
+    width: 100%;
+    padding: 16px 16px 16px 48px;
+    font-size: 15px;
+    color: var(--ob-black);
+    background-color: var(--ob-white);
+    border: 1px solid var(--ob-border);
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.ob-input:focus {
+    border-color: var(--ob-black);
+}
+
+.ob-select {
+    padding-left: 16px;
+}
+
+/* Role Selection Cards - Enhanced */
+.ob-role-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.ob-role-card {
+    border: 1px solid var(--ob-border);
+    border-radius: 24px;
+    /* More rounded */
+    padding: 32px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background: var(--ob-white);
+    text-align: left;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ob-role-card:hover {
+    border: 2px solid var(--ob-black);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    padding: 31px;
+    /* Adjust padding to prevent layout shift due to border width change */
+}
+
+.ob-role-card.active {
+    border: 2px solid var(--ob-black);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 31px;
+}
+
+/* Icons are always black now, not white when active */
+.ob-role-icon {
+    margin-bottom: 20px;
+    color: var(--ob-black);
+}
+
+.ob-role-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ob-black);
+    margin-bottom: 8px;
+}
+
+.ob-role-desc {
+    font-size: 14px;
+    color: var(--ob-text-sub);
+    line-height: 1.4;
+}
+
+/* Pill Selectors */
+.ob-pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.ob-pill {
+    padding: 12px 28px;
+    border-radius: 9999px;
+    border: 1px solid var(--ob-border);
+    background-color: var(--ob-white);
+    color: var(--ob-black);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ob-pill:hover {
+    border-color: var(--ob-black);
+}
+
+.ob-pill.active {
+    background-color: var(--ob-black);
+    color: var(--ob-white);
+    border-color: var(--ob-black);
+}
+
+/* Buttons */
+.ob-btn-primary {
+    background-color: var(--ob-black);
+    color: var(--ob-white);
+    font-weight: 600;
+    padding: 16px 48px;
+    /* px-12 py-4 */
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    width: fit-content;
+    font-size: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ob-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.ob-btn-ghost {
+    background: transparent;
+    color: var(--ob-text-sub);
+    border: none;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    width: fit-content;
+    padding: 10px 20px;
+    margin-top: 0;
+    transition: color 0.2s;
+}
+
+.ob-btn-ghost:hover {
+    color: var(--ob-black);
+}
+
+/* Right Column - Identity & Ghost UI */
+.ob-right {
+    flex: 1;
+    background-color: var(--ob-bg-right);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Ghost Board Styles */
+.ob-ghost-board {
+    position: absolute;
+    top: 50%;
+    left: 60%;
+    /* Pushed slightly more to the right */
+    transform: translate(-50%, -50%) rotate(-6deg) scale(1.1);
+    display: flex;
+    gap: 32px;
+    opacity: 0.03;
+    /* Extremely faint per request */
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+}
+
+.ob-ghost-column {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1.5px solid var(--ob-black);
+    border-radius: 20px;
+    padding: 20px;
+    height: 700px;
+    background: transparent;
+}
+
+.ob-ghost-col-header {
+    height: 12px;
+    width: 40%;
+    background-color: var(--ob-border-active);
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.col-1 {
+    margin-top: 0;
+}
+
+.col-2 {
+    margin-top: 60px;
+}
+
+.col-3 {
+    margin-top: 30px;
+}
+
+.h-20 {
+    height: 60px;
+}
+
+.h-24 {
+    height: 80px;
+}
+
+.h-28 {
+    height: 100px;
+}
+
+.h-32 {
+    height: 120px;
+}
+
+.h-40 {
+    height: 150px;
+}
+
+.ob-ghost-card {
+    width: 100%;
+    border: 1px solid var(--ob-black);
+    border-radius: 14px;
+    margin-bottom: 2px;
+}
+
+
+.ob-welcome-content {
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+}
+
+.ob-welcome-title {
+    font-size: 42px;
+    /* Reduced from 48px */
+    font-weight: 600;
+    color: var(--ob-black);
+    margin-bottom: 20px;
+    letter-spacing: -1.2px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ob-welcome-text {
+    font-size: 18px;
+    font-weight: 400;
+    /* Normal */
+    color: var(--ob-text-sub);
+    line-height: 1.6;
+    margin-bottom: 48px;
+}
+
+.ob-feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.ob-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+    color: var(--ob-black);
+    font-weight: 500;
+}
+
+.ob-feature-icon {
+    color: var(--ob-black);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .ob-container {
+        flex-direction: column;
+    }
+
+    .ob-right {
+        display: none;
+    }
+
+    .ob-left {
+        padding: 40px 24px;
+        align-items: flex-start;
+    }
+
+    .ob-step-indicator {
+        left: 24px;
+        top: 30px;
+    }
+}

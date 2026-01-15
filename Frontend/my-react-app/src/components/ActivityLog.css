@@ -1,0 +1,149 @@
+.activity-log-container {
+  min-height: 100vh;
+  padding: 40px 24px;
+  background: #f8fafc;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* ---------------- LOADING & EMPTY STATES ---------------- */
+
+.loading-state,
+.empty-state {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  text-align: center;
+}
+
+.loading-state p {
+  margin-top: 10px;
+}
+
+.empty-icon-box {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #64748b;
+}
+
+/* ---------------- HEADER ---------------- */
+
+.activity-header {
+  max-width: 900px;
+  margin: 0 auto 28px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.activity-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.activity-badge {
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+/* ---------------- ACTIVITY LIST ---------------- */
+
+.activity-item {
+  max-width: 900px;
+  margin: 0 auto 14px auto;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px 22px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  border-left: 6px solid #e2e8f0;
+  transition: all 0.25s ease;
+}
+
+.activity-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* ---------------- STATUS COLORS ---------------- */
+/* You can control color by keywords in activity.description */
+
+.activity-item:has(.main-text:contains("completed")),
+.activity-item:has(.main-text:contains("done")) {
+  border-left-color: #22c55e; /* GREEN */
+}
+
+.activity-item:has(.main-text:contains("assigned")),
+.activity-item:has(.main-text:contains("added")) {
+  border-left-color: #facc15; /* YELLOW */
+}
+
+.activity-item:has(.main-text:contains("removed")),
+.activity-item:has(.main-text:contains("deleted")) {
+  border-left-color: #ef4444; /* RED */
+}
+
+/* ---------------- CONTENT ---------------- */
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.main-text {
+  font-size: 15px;
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+.main-text b {
+  font-weight: 800;
+}
+
+/* ---------------- TIMESTAMP ---------------- */
+
+.timestamp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #64748b;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back-btn {
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #334155;
+  transform: translateY(-1px);
+}
