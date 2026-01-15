@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import axios from "axios";
+import API from "./api/config";
 import { useLocation } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -105,7 +105,7 @@ export default function App() {
   const refreshUser = async () => {
     if (!user) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/onboarding/user/${user.email}`);
+      const res = await API.get(`/api/onboarding/user/${user.email}`);
       const backendUser = res.data?.user;
       if (backendUser) {
         if (backendUser.role) backendUser.role = backendUser.role.toLowerCase();

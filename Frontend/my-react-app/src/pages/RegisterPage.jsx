@@ -59,7 +59,7 @@ const RegisterPage = () => {
             // 3. Sync with MongoDB & Firestore (Only on successful Auth)
             try {
                 // Backend Sync
-                await fetch("http://localhost:5000/api/auth/verify", {
+                await fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify`, {
                     method: "POST",
                     headers: {
                         Authorization: `Bearer ${token}`,

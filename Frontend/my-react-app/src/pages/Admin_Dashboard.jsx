@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Dashboard.css";
-import axios from "axios";
+import API from '../api/config';
 import {
   Plus, Briefcase, Layers, ArrowLeft, Clock,
   CheckCircle, Loader2, LogOut, User, Hash, Calendar, Check, BarChart3, History as HistoryIcon, ShieldCheck, Copy, MessageSquare
@@ -62,7 +62,7 @@ const AdminDashboard = ({ user: passedUser }) => {
 
   const fetchAdminProfile = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/onboarding/user/${currentUser.email}`);
+      const res = await API.get(`/api/onboarding/user/${currentUser.email}`);
       setAdminProfile(res.data.user);
     } catch (err) {
       console.error("Failed to load admin profile");
@@ -72,7 +72,7 @@ const AdminDashboard = ({ user: passedUser }) => {
   const fetchProjects = async () => {
     setIsSyncing(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/projects/${currentUser.email}`);
+      const res = await API.get(`/api/projects/${currentUser.email}`);
       setProjects(res.data);
       if (res.data.length > 0 && !selectedProject) {
         setSelectedProject(res.data[0]);
@@ -87,7 +87,7 @@ const AdminDashboard = ({ user: passedUser }) => {
   const fetchTasks = async (projectId) => {
     setIsSyncing(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/tasks/${projectId}`);
+      const res = await API.get(`/api/tasks/${projectId}`);
       setTasks(res.data);
     } catch (err) {
       toast.error("Failed to fetch project tasks.");
@@ -99,7 +99,7 @@ const AdminDashboard = ({ user: passedUser }) => {
   const fetchQueries = async (projectId) => {
     if (!projectId) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/queries/${projectId}`);
+      const res = await API.get(`/api/queries/${projectId}`);
       setQueries(res.data || []);
     } catch (err) {
       console.error("Failed to fetch queries", err);
@@ -109,7 +109,7 @@ const AdminDashboard = ({ user: passedUser }) => {
   const fetchTeamMembers = async (projectId) => {
     if (!projectId) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/team/${projectId}`);
+      const res = await API.get(`/api/team/${projectId}`);
       setTeamMembers(res.data.teamMembers || []);
     } catch (err) {
       console.error("❌ Failed to fetch team members", err);
@@ -131,7 +131,7 @@ const AdminDashboard = ({ user: passedUser }) => {
     setIsSyncing(true);
     const targetPID = adminProfile?.projectId || "DEFAULT_NEST";
     try {
-      const res = await axios.post("http://localhost:5000/api/projects", {
+      const res = await API.post("/api/projects", {
         projectId: targetPID,
         projectName: newProjectName.trim(),
         adminEmail: currentUser.email
@@ -157,7 +157,7 @@ const AdminDashboard = ({ user: passedUser }) => {
     if (!finalPID) return;
     setIsSyncing(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/tasks", {
+      const res = await API.post("/api/tasks", {
         projectId: String(finalPID),
         title: taskTitle.trim(),
         deadline: taskDeadline,
@@ -180,7 +180,7 @@ const AdminDashboard = ({ user: passedUser }) => {
     const pid = selectedProject?.projectId || adminProfile?.projectId;
     if (!newQueryText.trim() || !pid) return;
     try {
-      const res = await axios.post("http://localhost:5000/api/queries", {
+      const res = await API.post("/api/queries", {
         projectId: pid,
         text: newQueryText,
         senderEmail: currentUser?.email,
@@ -196,7 +196,7 @@ const AdminDashboard = ({ user: passedUser }) => {
 
   const handleResolveQuery = async (id) => {
     try {
-      const res = await axios.patch(`http://localhost:5000/api/queries/${id}/resolve`, {
+      const res = await API.patch(`/api/queries/${id}/resolve`, {
         userName: adminProfile?.fullName || currentUser?.email?.split('@')[0]
       });
       setQueries(prev => prev.map(q => q._id === id ? res.data : q));

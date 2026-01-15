@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Clock, History, RefreshCw } from "lucide-react";
-import axios from "axios";
+import API from "../api/config";
 import "./ActivityLog.css";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -22,8 +22,8 @@ const ActivityLog = () => {
     const fetchActivities = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          `http://localhost:5000/api/activities/${projectId}`
+        const res = await API.get(
+          `/api/activities/${projectId}`
         );
         setActivities(res.data || []);
       } catch (err) {

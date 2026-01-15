@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 import Progress from './Progress';
 import './Progress.css';
-import axios from 'axios';
+import API from '../api/config';
 import {
   Layers, Plus, Check, Briefcase, User, ArrowLeft, Clock,
   MoreHorizontal, Search, Copy, MessageSquare, X, Loader2, LogOut, BarChart3, History as HistoryIcon, ShieldCheck
@@ -44,7 +44,7 @@ const Dashboard = ({ user: passedUser }) => {
       if (storedUser?.role === "admin") return;
       setCurrentUser(user);
       try {
-        const res = await axios.get(`http://localhost:5000/api/dashboard/${user.email}`);
+        const res = await API.get(`/api/dashboard/${user.email}`);
         setDashboardData(res.data);
         const pid = res.data.activeProjectId;
         if (!pid) return;
@@ -62,7 +62,7 @@ const Dashboard = ({ user: passedUser }) => {
     if (!projectId) return;
     if (!silent) setIsSyncing(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/tasks/${projectId}`);
+      const res = await API.get(`/api/tasks/${projectId}`);
       setTasks(res.data);
     } catch (err) {
       if (!silent) toast.error("Failed to sync tasks.");
@@ -74,7 +74,7 @@ const Dashboard = ({ user: passedUser }) => {
   const fetchQueries = async (projectId) => {
     if (!projectId) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/queries/${projectId}`);
+      const res = await API.get(`/api/queries/${projectId}`);
       setQueries(res.data || []);
     } catch (err) {
       console.error("Failed to fetch queries", err);
@@ -83,7 +83,7 @@ const Dashboard = ({ user: passedUser }) => {
 
   const fetchTeamMembers = async (projectId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/team/${projectId}`);
+      const res = await API.get(`/api/team/${projectId}`);
       setTeamMembers(res.data.teamMembers || []);
     } catch (err) {
       console.error("Failed to fetch team members");
@@ -116,7 +116,7 @@ const Dashboard = ({ user: passedUser }) => {
     const pid = dashboardData?.activeProjectId;
     if (!newQueryText.trim() || !pid) return;
     try {
-      const res = await axios.post("http://localhost:5000/api/queries", {
+      const res = await API.post("/api/queries", {
         projectId: pid,
         text: newQueryText,
         senderEmail: currentUser?.email,
@@ -132,7 +132,7 @@ const Dashboard = ({ user: passedUser }) => {
 
   const handleResolveQuery = async (id) => {
     try {
-      const res = await axios.patch(`http://localhost:5000/api/queries/${id}/resolve`, {
+      const res = await API.patch(`/api/queries/${id}/resolve`, {
         userName: currentUser?.email?.split('@')[0]
       });
       setQueries(prev => prev.map(q => q._id === id ? res.data : q));
@@ -144,7 +144,7 @@ const Dashboard = ({ user: passedUser }) => {
   const handleToggleTask = async (taskId, currentStatus) => {
     const newStatus = currentStatus === 'Done' ? 'To-Do' : 'Done';
     try {
-      const res = await axios.patch(`http://localhost:5000/api/tasks/${taskId}`, {
+      const res = await API.patch(`/api/tasks/${taskId}`, {
         status: newStatus,
         userName: currentUser?.email?.split('@')[0],
         userEmail: currentUser?.email

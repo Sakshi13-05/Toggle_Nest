@@ -38,7 +38,7 @@ const LoginPage = () => {
 
           // 1. Verify token
           try {
-            await fetch("http://localhost:5000/api/auth/verify", {
+            await fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify`, {
               method: "POST",
               headers: { Authorization: `Bearer ${token}` },
             });
@@ -47,7 +47,7 @@ const LoginPage = () => {
           }
 
           // 2. Fetch Role
-          const res = await fetch(`http://localhost:5000/api/onboarding/user/${user.email}`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/onboarding/user/${user.email}`);
           const data = await res.json();
           const userData = data?.user;
           const role = userData?.role;
@@ -109,7 +109,7 @@ const LoginPage = () => {
       const token = await user.getIdToken();
 
       try {
-        await fetch("http://localhost:5000/api/auth/verify", {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify`, {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -118,7 +118,7 @@ const LoginPage = () => {
       }
 
       const res = await fetch(
-        `http://localhost:5000/api/onboarding/user/${user.email}`
+        `${import.meta.env.VITE_API_URL}/api/onboarding/user/${user.email}`
       );
       const data = await res.json();
 
