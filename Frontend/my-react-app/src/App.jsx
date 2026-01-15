@@ -3,7 +3,9 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import API from "./api/config";
+import API, { BASE_URL } from "./api/config";
+console.log("Frontend is now talking to Backend at:", BASE_URL);
+
 import { useLocation } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";

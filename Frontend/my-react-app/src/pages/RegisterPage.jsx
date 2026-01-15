@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { ArrowRight, Loader2, User, Mail, ShieldCheck, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { BASE_URL } from '../api/config';
 import './Auth.css';
+
 import reg from "/image/reg.jpg";
 import toast, { Toaster } from 'react-hot-toast';
 import { auth, db } from "../firebase";

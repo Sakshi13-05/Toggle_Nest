@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { Briefcase, User, Rocket, CheckCircle, ArrowRight, Layers, Hash, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import API from '../api/config';
+import API, { BASE_URL } from '../api/config';
+
 import toast, { Toaster } from 'react-hot-toast';
 import './Onboarding.css';
 import { onAuthStateChanged } from "firebase/auth";
@@ -70,7 +71,7 @@ const OnboardingPage = ({ refreshUser }) => {
         };
 
         try {
-            const response = await API.post('/api/onboarding', onboardingData);
+            const response = await API.post(`${BASE_URL}/api/onboarding`, onboardingData);
 
             if (response.status === 200) {
                 toast.success("Nest Found! Welcome aboard.", { id: loadingToast });
