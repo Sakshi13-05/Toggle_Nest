@@ -105,7 +105,12 @@ export default function App() {
   const [syncLoading, setSyncLoading] = useState(true);
 
   const refreshUser = async () => {
-    if (!user) return;
+    if (!user) {
+      setSyncLoading(false);
+      return;
+    }
+
+    setSyncLoading(true);
     try {
       const res = await API.get(`/api/onboarding/user/${user.email}`);
       const backendUser = res.data?.user;
@@ -116,63 +121,92 @@ export default function App() {
       }
     } catch (err) {
       console.error("Sync error:", err);
+      // If backend sync fails, set a minimal user object to prevent infinite loading
+      setFullUserData({
+        email: user.email,
+        role: null,
+        onboardingComplete: false
+      });
     } finally {
       setSyncLoading(false);
     }
   };
 
   useEffect(() => {
-    if (user) refreshUser();
-    else {
+    if (user) {
+      refreshUser();
+    } else {
       setFullUserData(null);
       setSyncLoading(false);
       localStorage.removeItem('user');
     }
   }, [user]);
 
-  if (authLoading || (syncLoading && !fullUserData)) {
+  // CRITICAL: Wait for both auth and sync to complete before rendering routes
+  if (authLoading || syncLoading) {
     return <LoadingSpinner />;
   }
 
   const isOnboarded = fullUserData?.onboardingComplete || fullUserData?.onboardingCompleted;
   const role = fullUserData?.role?.toLowerCase();
 
+  // Debug logging
+  console.log("🔍 App Routing State:", {
+    user: !!user,
+    userEmail: user?.email,
+    isOnboarded,
+    role,
+    fullUserData
+  });
+
   return (
     <Routes>
+      {/* Root Path - Smart Redirect */}
       <Route path="/" element={
         !user ? <LandingPage /> :
           !isOnboarded ? <Navigate to="/onboarding" replace /> :
-            role === 'admin' ? <Navigate to="/admindashboard" replace /> : <Navigate to="/dashboard" replace />
+            role === 'admin' ? <Navigate to="/admindashboard" replace /> :
+              role === 'member' ? <Navigate to="/dashboard" replace /> :
+                <Navigate to="/onboarding" replace />
       } />
 
+      {/* Public Routes - Redirect to root if authenticated */}
       <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" replace />} />
       <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/" replace />} />
 
+      {/* Onboarding Route - Accessible to ALL authenticated users */}
       <Route path="/onboarding" element={
         user ? (
           isOnboarded ? (
-            role === 'admin' ? <Navigate to="/admindashboard" replace /> : <Navigate to="/dashboard" replace />
+            role === 'admin' ? <Navigate to="/admindashboard" replace /> :
+              role === 'member' ? <Navigate to="/dashboard" replace /> :
+                <OnboardingPage refreshUser={refreshUser} />
           ) : <OnboardingPage refreshUser={refreshUser} />
         ) : <Navigate to="/login" replace />
       } />
 
+      {/* Member Dashboard - Requires onboarding completion */}
       <Route path="/dashboard" element={
-        user ? (
+        !user ? <Navigate to="/login" replace /> :
           !isOnboarded ? <Navigate to="/onboarding" replace /> :
-            role === 'admin' ? <Navigate to="/admindashboard" replace /> : <DashboardRouter userData={fullUserData} />
-        ) : <Navigate to="/" replace />
+            role === 'admin' ? <Navigate to="/admindashboard" replace /> :
+              <DashboardRouter userData={fullUserData} />
       } />
 
+      {/* Admin Dashboard - Requires onboarding completion and admin role */}
       <Route path="/admindashboard" element={
-        user ? (
+        !user ? <Navigate to="/login" replace /> :
           !isOnboarded ? <Navigate to="/onboarding" replace /> :
-            role === 'member' ? <Navigate to="/dashboard" replace /> : <DashboardRouter userData={fullUserData} />
-        ) : <Navigate to="/login" replace />
+            role === 'member' ? <Navigate to="/dashboard" replace /> :
+              <DashboardRouter userData={fullUserData} />
       } />
 
-      <Route path="/profile" element={user ? <ViewProfile /> : <Navigate to="/" replace />} />
+      {/* Protected Routes - Require authentication */}
+      <Route path="/profile" element={user ? <ViewProfile /> : <Navigate to="/login" replace />} />
       <Route path="/progress" element={user ? <Progress /> : <Navigate to="/login" replace />} />
       <Route path="/history/:projectId" element={user ? <ActivityLog /> : <Navigate to="/login" replace />} />
+
+      {/* Catch-all - Redirect to root */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
